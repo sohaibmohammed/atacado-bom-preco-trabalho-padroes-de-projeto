@@ -1,0 +1,1 @@
+#Nao expor as classes (deve usar as factories)
