@@ -1,3 +1,68 @@
+
+# Projeto Atacado Bom Preco - Padrões de Projeto - Projeto 2
+
+Nesta fase, foi adicionado dois padrões estruturais para aumentar a flexibilidade e simplificar o uso do nosso sistema: **Decorator** e **Facade**.
+
+O **Decorator** é usado para adicionar novos comportamentos a objetos dinamicamente, "envolvendo-os" em objetos decoradores especiais. Isto por que buscamos uma forma 
+forma de adicionar elementos extras aos nossos produtos, como "Embrulho para Presente" ou "Estampa Personalizada", sem precisar criar uma subclasse para cada combinação possível (ex: `BrinquedoComEmbrulho`, `BrinquedoComEstampa`, `BrinquedoComAmbos`, etc.). 
+
+**Como foi implementado?**
+1.  Criamos uma classe `ProductDecorator` abstrata que herda de `Product`.
+2.  Implementamos decorators concretos como `GiftWrapDecorator`, que envolvem um `Product` e modificam seu preço e descrição.
+
+### Padrão Facade
+
+Já o Facade (Fachada) foi usado para termos uma interface unificada e simplificada, escondendo a complexidade do sistema e fornecendo um ponto de entrada mais fácil de usar. Como o processo de criar um produto envolvia conhecer a fábrica correta e, depois, aplicar manualmente os decoradores. Isso ficava muito complexo  na hora de implementar o sistema (cliente). A `StoreFacade` simplifica tudo isso em uma única chamada de método.
+
+**Como foi implementado?**
+Criamos a classe `StoreFacade`, que contém a lógica para:
+1.  Selecionar a fábrica correta com base em uma string (`'brinquedo'`, `'utilidade'`).
+2.  Criar o produto base.
+3.  Aplicar os decoradores solicitados através de parâmetros opcionais.
+4.  Retornar o produto finalizado para o cliente.
+
+**Exemplo de uso (facade e decorator):**
+```python
+# O Facade esconde a complexidade de qual fábrica usar.
+print("--- Projeto 2 ---")
+print("--- Comprando produtos via Facade ---")
+
+# instância da facade da loja
+loja = StoreFacade()
+
+# Usando a facade para comprar diferentes tipos de produtos
+# Comprando um material escolar
+caderno = loja.buy_product(
+    product_type='material_escolar',
+    name='Caderno Espiral',
+    price=25.50
+)
+# Saída: Compra finalizada: Material Escolar: Caderno Espiral, Preço: R$25.50
+
+# Comprando um brinquedo
+carrinho = loja.buy_product(
+    product_type='brinquedo',
+    name='Carrinho de Polícia',
+    price=80.00
+)
+# Saida: Compra finalizada: Brinquedo: Carrinho de Polícia, Preço: R$80.00
+
+print("\n--- Comprando produto com decoração via Facade ---")
+
+# Comprando um produto e solicitar extras (que usarão os Decorators)
+carrinho_final = loja.buy_product(
+    product_type='brinquedo',
+    name='Carrinho de Controle Remoto',
+    price=150.00,
+    add_gift_wrap=True,
+    custom_stamp="Para o campeão!"
+)
+# O Facade já retorna o produto final, decorado e com o preço correto.
+# Preço final será 150.00 (base) + 10.00 (embrulho) + 5.50 (estampa) = 165.50
+```
+
+------------------------------------
+
 # Projeto Atacado Bom Preco - Padrões de Projeto - Projeto 1
 
 Foi escolhido o padrão de projeto Factory Method, com o objetivo de termos uma base uma base sólida para a criação de objetos. O tema aplicado foi da minha loja de produtos, Atacado Bom Preço, desenvolvido com a linguagem Python.

@@ -9,6 +9,10 @@ class Product(ABC):
         self.name = name
         self.price = price
 
+    def get_price(self) -> float:
+        """Retorna o preço do produto."""
+        return self.price
+
     @abstractmethod
     def get_details(self) -> str:
         """Retorna os detalhes do produto."""
