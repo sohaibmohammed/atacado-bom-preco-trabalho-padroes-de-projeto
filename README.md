@@ -1,3 +1,56 @@
+# Projeto Atacado Bom Preco - Padrões de Projeto - Projeto 3 - Final
+
+Neste projeto final, conforme solicitado, foi usado padrões comportamentais, como `Strategy` e `Observer`, visando gerenciar os algoritmos e a comunicação entre os objetos de forma limpa e desacoplada.
+
+O **Strategy** foi usado para gerenciar os diferentes métodos de pagamento. Em vez de uma lógica condicional para "Cartão de Crédito", "Pix", etc., criamos uma interface `PaymentStrategy` e implementamos clssses concretas (`CreditCardPaymentStrategy`, `PixPaymentStrategy`). Assim, o algoritmo de pagamento é escolhido e trocado em tempo de execução, e novos métodos podem ser adicionados sem alterar a StoreFacade.
+
+Ja o padrão **Observer** foi implementado para permitir a notificação de diferentes partes do sistema sobre uma venda, de forma desacoplada. A `StoreFacade` atua como `Subject` (ou "Observável"). Quando uma compra é concluída, ela notifica todos os Observers registrados (como `InventoryObserver` e `EmailObserver`) sem precisar conhecê-los diretamente. Isso permite que novas ações de "pós-venda" sejam adicionadas simplesmente criando novos observadores.
+
+## Exemplo de uso dos padroes
+
+O código abaixo demonstra como os padrões trabalham juntos através da StoreFacade, o ponto de entrada principal do sistema.
+
+```python
+from src.facade import StoreFacade
+from src.strategies import PixPaymentStrategy, CreditCardPaymentStrategy
+from src.observers import InventoryObserver, EmailObserver
+
+# 1. Configuração inicial do sistema
+loja = StoreFacade()
+
+# Anexando observadores (padrão Observer) que serão notificados após cada compra
+loja.attach(InventoryObserver())
+loja.attach(EmailObserver())
+
+# Criando as estratégias de pagamento (padrão Strategy)
+estrategia_pix = PixPaymentStrategy()
+estrategia_cartao = CreditCardPaymentStrategy()
+
+# 2. Cenário de Compra 1: Produto decorado, pago com Pix
+print("--- Cenário 1: Compra de brinquedo decorado com Pix ---")
+# A Facade coordena tudo:
+# - Usa a Factory de brinquedos para criar o 'Super Robô'.
+# - Aplica os Decorators de embrulho e estampa.
+# - Usa a Strategy de Pix para processar o pagamento.
+# - Notifica os Observers sobre a venda.
+loja.buy_product(
+    product_type='brinquedo',
+    name='Super Robô',
+    price=200.00,
+    payment_strategy=estrategia_pix, 
+    add_gift_wrap=True,
+    custom_stamp="Para o melhor filho!"
+)
+
+# 3. Cenário de Compra 2: Produto simples, pago com Cartão de Crédito
+print("\n--- Cenário 2: Compra de utilidade simples com Cartão ---")
+loja.buy_product(
+    product_type='utilidade',
+    name='Garrafa de Água Inox',
+    price=40.00,
+    payment_strategy=estrategia_cartao
+)
+```
 
 # Projeto Atacado Bom Preco - Padrões de Projeto - Projeto 2
 

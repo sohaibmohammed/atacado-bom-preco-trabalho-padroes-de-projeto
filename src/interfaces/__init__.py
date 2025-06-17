@@ -7,3 +7,5 @@ para facilitar a importação em outros módulos.
 from .product import Product
 from .product_factory import ProductFactory
 from .product_decorator import ProductDecorator
+from .payment_strategy import PaymentStrategy
+from .observer_protocol import Subject, Observer
